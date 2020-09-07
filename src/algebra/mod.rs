@@ -106,6 +106,20 @@ impl<T: Default + Add<Output = T> + Mul<Output = T> + Root<T> + Copy, const SIZE
     }
 }
 
+impl<T: Default + Add<Output = T> + Div<Output = T> + Mul<Output = T> + Root<T> + Copy, const SIZE: usize> Vector<T, SIZE> {
+    pub fn normalized(&self) -> Vector<T, SIZE> {
+        let mag = self.magnitude();
+
+        let coords = self.coords.map(|e| {
+            e / mag
+        });
+
+        Vector {
+            coords
+        }
+    }
+}
+
 impl Root<f64> for f64 {
     fn root(&self) -> f64 {
         self.sqrt()

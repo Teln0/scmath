@@ -8,5 +8,5 @@ mod algebra;
 
 fn main() {
     let a = algebra::Vec3f::new(1f64, 2f64, 5f64);
-    println!("{}", a.magnitude());
+    println!("{}", a.normalized().magnitude());
 }
