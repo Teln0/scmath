@@ -1,12 +1,15 @@
 #![feature(const_generics)]
 #![feature(array_map)]
+#![feature(core_intrinsics)]
+
+use crate::base::utils::HeapArray;
 
 #[allow(incomplete_features)]
 #[allow(dead_code)]
 
-mod algebra;
+mod base;
 
 fn main() {
-    let a = algebra::Vec3f::new(1f64, 2f64, 5f64);
-    println!("{}", a.normalized().magnitude());
+    let a: HeapArray<u64> = HeapArray::new_with_slice(&[1, 2, 3]);
+    println!("{}", a[0]);
 }

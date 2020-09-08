@@ -2,6 +2,9 @@ use std::ops::{Add, Sub, Mul, Div};
 use std::fmt::{Display, Formatter};
 use core::fmt;
 
+pub mod geometry;
+pub(crate) mod utils;
+
 pub struct Vector<T, const SIZE: usize> {
     pub coords: [T; SIZE]
 }
@@ -117,6 +120,12 @@ impl<T: Default + Add<Output = T> + Div<Output = T> + Mul<Output = T> + Root<T> 
         Vector {
             coords
         }
+    }
+}
+
+impl<T: Default + Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Root<T> + Copy, const SIZE: usize> Vector<T, SIZE> {
+    pub fn distance(&self, rhs: &Vector<T, SIZE>) -> T {
+        (self - rhs).magnitude()
     }
 }
 
