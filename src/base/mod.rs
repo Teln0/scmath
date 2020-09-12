@@ -1,6 +1,7 @@
 use std::ops::{Add, Sub, Mul, Div};
 use std::fmt::{Display, Formatter};
 use core::fmt;
+use std::process::Output;
 
 pub mod geometry;
 pub(crate) mod utils;
@@ -88,8 +89,22 @@ impl<T: Display, const SIZE: usize> Display for Vector<T, SIZE> {
     }
 }
 
-impl<T: Default + Add<Output = T> + Mul<Output = T> + Copy, const SIZE: usize> Vector<T, SIZE> {
-    pub fn dot(&self, rhs: &Vector<T, SIZE>) -> T {
+pub trait Dot<T> {
+    type Output;
+
+    fn dot(&self, rhs: &T) -> Self::Output;
+}
+
+pub trait Normalized {
+    type Output;
+
+    fn normalized(&self) -> Self::Output;
+}
+
+impl<T: Default + Add<Output = T> + Mul<Output = T> + Copy, const SIZE: usize> Dot<Vector<T, SIZE>> for Vector<T, SIZE> {
+    type Output = T;
+
+    fn dot(&self, rhs: &Vector<T, SIZE>) -> T {
         let mut result = T::default();
         for i in 0..self.coords.len() {
             result = result + (self.coords[i] * rhs.coords[i]);
@@ -109,8 +124,10 @@ impl<T: Default + Add<Output = T> + Mul<Output = T> + Root<T> + Copy, const SIZE
     }
 }
 
-impl<T: Default + Add<Output = T> + Div<Output = T> + Mul<Output = T> + Root<T> + Copy, const SIZE: usize> Vector<T, SIZE> {
-    pub fn normalized(&self) -> Vector<T, SIZE> {
+impl<T: Default + Add<Output = T> + Div<Output = T> + Mul<Output = T> + Root<T> + Copy, const SIZE: usize> Normalized for Vector<T, SIZE> {
+    type Output = Self;
+
+    fn normalized(&self) -> Vector<T, SIZE> {
         let mag = self.magnitude();
 
         let coords = self.coords.map(|e| {
@@ -121,6 +138,18 @@ impl<T: Default + Add<Output = T> + Div<Output = T> + Mul<Output = T> + Root<T> 
             coords
         }
     }
+}
+
+impl<T: Clone + Copy, const SIZE: usize> Clone for Vector<T, SIZE> {
+    fn clone(&self) -> Self {
+        Vector {
+            coords: self.coords
+        }
+    }
+}
+
+impl<T: Copy, const SIZE: usize> Copy for Vector<T, SIZE> {
+
 }
 
 impl<T: Default + Add<Output = T> + Mul<Output = T> + Sub<Output = T> + Root<T> + Copy, const SIZE: usize> Vector<T, SIZE> {

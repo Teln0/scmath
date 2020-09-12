@@ -1,8 +1,10 @@
 #![feature(const_generics)]
 #![feature(array_map)]
 #![feature(core_intrinsics)]
+#![feature(associated_type_bounds)]
 
-use crate::base::utils::HeapArray;
+use crate::base::Vec2f;
+use crate::base::geometry::{Line, Polygon};
 
 #[allow(incomplete_features)]
 #[allow(dead_code)]
@@ -10,6 +12,19 @@ use crate::base::utils::HeapArray;
 mod base;
 
 fn main() {
-    let a: HeapArray<u64> = HeapArray::new_with_slice(&[1, 2, 3]);
-    println!("{}", a[0]);
+    let a = Vec2f::new(0_f64, 0_f64);
+    let line = Line::new(
+        Vec2f::new(1_f64, -1_f64),
+        Vec2f::new(1_f64, 1_f64)
+    );
+
+    let poly = Polygon::new([
+        Vec2f::new(0_f64, 0_f64),
+        Vec2f::new(1_f64, 0_f64),
+        Vec2f::new(0_f64, 1_f64),
+        Vec2f::new(1_f64, 1_f64),
+    ]);
+
+    println!("{}", a.is_on_left_of(&line));
+    println!("{}", poly.self_intersecting());
 }

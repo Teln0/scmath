@@ -34,7 +34,7 @@ impl<T> HeapArray<T> {
 
 impl<T: Copy> HeapArray<T> {
     pub fn new_with_slice(slice: &[T]) -> HeapArray<T> {
-        let mut inner: Box<[T]> = slice.iter().map(|e| {
+        let inner: Box<[T]> = slice.iter().map(|e| {
             *e
         }).collect();
 
